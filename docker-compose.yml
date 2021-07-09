@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  frontend:
+    container_name: "frontend"
+    build: "./frontend"
+    volumes:
+      - "./frontend:/app"
+    ports: 
+      - "3000:3000"
+
+  backend:
+    container_name: "backend"
+    build: "./backend"
+    volumes:
+      - "./backend:/app"
+  
+  judge:
+    container_name: "judge"
+    build: "./judge"
+    volumes:
+      - "./judge:/app"
+
+  db:
+    container_name: "db"
+    image: mysql:8.0.25
+    volumes:
+      - "db-store:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "online_judge"
+      MYSQL_USER: "develop"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+
+volumes:
+  db-store:

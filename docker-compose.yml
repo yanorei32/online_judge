@@ -14,6 +14,8 @@ services:
     build: "./backend"
     volumes:
       - "./backend:/app"
+    ports: 
+      - "1323:1323"
   
   judge:
     container_name: "judge"

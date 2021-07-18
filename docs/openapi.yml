@@ -1,0 +1,17 @@
+openapi: "3.0.0"
+
+info:
+  title: "Online judge API"
+  version: "1.0.0"
+  description: "Online judge's backend api reference"
+
+servers:
+  - url: "http://localhost:1323"
+
+paths:
+  /:
+    get:
+      summary: "Sample response"
+      responses:
+        "200":
+          description: "Successful operation"

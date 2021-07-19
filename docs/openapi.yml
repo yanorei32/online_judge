@@ -10,6 +10,7 @@ servers:
 
 tags:
   - name: "users"
+  - name: "problems"
 
 paths:
   /register:
@@ -62,6 +63,38 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/LogoutResponse"
+  /problems:
+    get:
+      summary: "Get list of problems"
+      tags:
+        - "problems"
+      security:
+        - session: []
+      parameters:
+        - $ref: "#/components/parameters/Page"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetProblemsListResponse"
+  /problems/{id}:
+    get:
+      summary: "Get problem"
+      tags:
+        - "problems"
+      security:
+        - session: []
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetProblemResponse"
 
 components:
   securitySchemes:
@@ -69,6 +102,17 @@ components:
       type: apiKey
       in: cookie
       name: session
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: "integer"
+    Id:
+      name: id
+      in: path
+      schema:
+        type: "integer"
   schemas:
     ResponseBase:
       required:
@@ -125,3 +169,50 @@ components:
     LogoutResponse:
       allOf:
         - $ref: "#/components/schemas/ResponseBase"
+    GetProblemsListResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"
+      properties:
+        problems:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              name:
+                type: "string"
+              type:
+                type: "string"
+              public:
+                type: "boolean"
+              time_limit:
+                type: "integer"
+              memory_limit:
+                type: "integer"
+    GetProblemResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"
+      properties:
+        problem:
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            type:
+              type: "string"
+            public:
+              type: "boolean"
+            time_limit:
+              type: "integer"
+            memory_limit:
+              type: "integer"
+            statement:
+              type: "string"
+            constraints:
+              type: "string"
+            input_format:
+              type: "string"
+            output_format:
+              type: "string"

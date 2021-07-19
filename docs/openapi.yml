@@ -8,10 +8,120 @@ info:
 servers:
   - url: "http://localhost:1323"
 
+tags:
+  - name: "users"
+
 paths:
-  /:
-    get:
-      summary: "Sample response"
+  /register:
+    post:
+      summary: "Register a user"
+      tags:
+        - "users"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterData"
       responses:
         "200":
           description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+  /login:
+    post:
+      summary: "Login a user"
+      tags:
+        - "users"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginData"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+  /logout:
+    get:
+      summary: "Logout a user"
+      tags:
+        - "users"
+      security:
+        - session: []
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogoutResponse"
+
+components:
+  securitySchemes:
+    session:
+      type: apiKey
+      in: cookie
+      name: session
+  schemas:
+    ResponseBase:
+      required:
+        - "success"
+        - "error"
+      properties:
+        success:
+          type: "boolean"
+        error:
+          type: "string"
+    RegisterData:
+      required:
+        - "email"
+        - "name"
+        - "password"
+      properties:
+        email:
+          type: "string"
+        name:
+          type: "string"
+        password:
+          type: "string"
+    RegisterResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"
+      properties:
+        user:
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+    LoginData:
+      required:
+        - "name"
+        - "password"
+      properties:
+        name:
+          type: "string"
+        password:
+          type: "string"
+    LoginResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"
+      properties:
+        user:
+          properties:
+            id:
+              type: "integer"
+            name:
+              type: "string"
+            role:
+              type: "string"
+    LogoutResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"

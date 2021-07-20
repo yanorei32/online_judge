@@ -11,6 +11,7 @@ servers:
 tags:
   - name: "users"
   - name: "problems"
+  - name: "submissions"
 
 paths:
   /register:
@@ -95,6 +96,58 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GetProblemResponse"
+  /submit:
+    get:
+      summary: "Submit code"
+      tags:
+        - "submissions"
+      security:
+        - session: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitData"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitResponse"
+  /submissions:
+    get:
+      summary: "Get list of submissions"
+      tags:
+        - "submissions"
+      security:
+        - session: []
+      parameters:
+        - $ref: "#/components/parameters/Page"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSubmissionsListResponse"
+  /submissions/{id}:
+    get:
+      summary: "Get submission"
+      tags:
+        - "submissions"
+      security:
+        - session: []
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        "200":
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetSubmissionResponse"
 
 components:
   securitySchemes:
@@ -216,3 +269,110 @@ components:
               type: "string"
             output_format:
               type: "string"
+    SubmitData:
+      required:
+        - "problem_id"
+        - "language"
+        - "code"
+      properties:
+        problem_id:
+          type: "integer"
+        language:
+          type: "string"
+        code:
+          type: "string"
+    SubmitResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"
+      properties:
+        id:
+          type: "integer"
+    GetSubmissionsListResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"
+      properties:
+        submissions:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              problem_id:
+                type: "integer"
+              problem_name:
+                type: "string"
+              user_name:
+                type: "string"
+              public:
+                type: "boolean"
+              status:
+                type: "string"
+              score:
+                type: "integer"
+              execution_time:
+                type: "integer"
+              execution_memory:
+                type: "integer"
+              date:
+                type: "string"
+    GetSubmissionResponse:
+      allOf:
+        - $ref: "#/components/schemas/ResponseBase"
+      properties:
+        submission:
+          properties:
+            id:
+              type: "integer"
+            problem_id:
+              type: "integer"
+            problem_name:
+              type: "string"
+            user_name:
+              type: "string"
+            public:
+              type: "boolean"
+            status:
+              type: "string"
+            score:
+              type: "integer"
+            execution_time:
+              type: "integer"
+            execution_memory:
+              type: "integer"
+            date:
+              type: "string"
+            code:
+              type: "string"
+            testsets:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  id:
+                    type: "integer"
+                  name:
+                    type: "string"
+                  status:
+                    type: "string"
+                  score:
+                    type: "integer"
+            testcases:
+              type: "array"
+              items:
+                type: "object"
+                properties:
+                  id:
+                    type: "integer"
+                  name:
+                    type: "string"
+                  status:
+                    type: "string"
+                  execution_time:
+                    type: "integer"
+                  execution_memory:
+                    type: "integer"
+                  testset_ids:
+                    type: "array"
+                    items:
+                      type: "integer"

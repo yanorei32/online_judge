@@ -32,6 +32,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RegisterResponse"
+          headers: 
+            Set-Cookie:
+              schema: 
+                type: string
   /login:
     post:
       summary: "Login a user"

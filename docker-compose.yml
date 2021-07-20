@@ -36,5 +36,15 @@ services:
       MYSQL_PASSWORD: "password"
       MYSQL_ROOT_PASSWORD: "rootpassword"
 
+  swagger:
+    container_name: "swagger"
+    image: swaggerapi/swagger-ui
+    volumes:
+      - "./docs/openapi.yml:/usr/share/nginx/html/openapi.yml"
+    environment:
+      API_URL: "openapi.yml"
+    ports:
+        - "3300:8080"
+
 volumes:
   db-store:

@@ -1,0 +1,5 @@
+development:
+  dialect: mysql
+  datasource: develop:password@tcp(db:3306)/online_judge?parseTime=true
+  dir: migrations
+  table: migrations

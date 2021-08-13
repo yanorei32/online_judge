@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  frontend:
+    container_name: "frontend"
+    build:
+      context: "./frontend/"
+      dockerfile: "prod.Dockerfile"
+    ports: 
+      - "3000:5000"
+
+  backend:
+    container_name: "backend"
+    build:
+      context: "./backend/"
+      dockerfile: "prod.Dockerfile"
+    ports: 
+      - "1323:1323"
+  
+  judge:
+    container_name: "judge"
+    build:
+      context: "./judge/"
+      dockerfile: "prod.Dockerfile"
+
+  db:
+    container_name: "db"
+    image: mysql:8.0.25
+    volumes:
+      - "db-store:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "online_judge"
+      MYSQL_USER: "develop"
+      MYSQL_PASSWORD: "password"
+      MYSQL_ROOT_PASSWORD: "rootpassword"
+
+  swagger:
+    container_name: "swagger"
+    image: swaggerapi/swagger-ui
+    volumes:
+      - "./docs/openapi.yml:/usr/share/nginx/html/openapi.yml"
+    environment:
+      API_URL: "openapi.yml"
+    ports:
+        - "3300:8080"
+
+volumes:
+  db-store:

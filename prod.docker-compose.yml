@@ -21,7 +21,7 @@ services:
     container_name: "judge"
     build:
       context: "./judge/"
-      dockerfile: "prod.Dockerfile"
+      target: "prod-env"
 
   db:
     container_name: "db"

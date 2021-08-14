@@ -22,9 +22,12 @@ services:
   
   judge:
     container_name: "judge"
-    build: "./judge"
+    build:
+      context: "./judge/"
+      target: "dev-env"
     volumes:
       - "./judge:/app"
+    tty: true
 
   db:
     container_name: "db"

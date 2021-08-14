@@ -13,7 +13,7 @@ services:
     container_name: "backend"
     build:
       context: "./backend/"
-      dockerfile: "prod.Dockerfile"
+      target: "prod-env"
     ports: 
       - "1323:1323"
   

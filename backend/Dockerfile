@@ -1,12 +1,26 @@
-FROM golang:1.16.5
+# Develop
+FROM golang:1.16.5 as dev-env
 
-ENV GOPATH=
 ENV PATH=/root/go/bin:$PATH
 
-COPY go.* ./
-RUN go mod download
+WORKDIR "/app"
 RUN go get -v github.com/rubenv/sql-migrate/...
 
-WORKDIR "/app"
+EXPOSE 1323
 
-ENTRYPOINT ["go", "run", "main.go"]
+# Build
+FROM golang:1.16.5 as build-env
+
+WORKDIR /work
+COPY . .
+RUN go mod download
+RUN go build
+
+# Product
+FROM gcr.io/distroless/base-debian10 as prod-env
+
+COPY --from=build-env /work/backend /
+
+EXPOSE 1323
+
+ENTRYPOINT [ "/backend" ]

@@ -11,11 +11,14 @@ services:
 
   backend:
     container_name: "backend"
-    build: "./backend"
+    build:
+      context: "./backend/"
+      target: "dev-env"
     volumes:
       - "./backend:/app"
     ports: 
       - "1323:1323"
+    tty: true
   
   judge:
     container_name: "judge"

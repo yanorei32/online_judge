@@ -3,11 +3,15 @@ version: "3.9"
 services:
   frontend:
     container_name: "frontend"
-    build: "./frontend"
+    build:
+      context: "./frontend/"
+      target: "dev-env"
     volumes:
       - "./frontend:/app"
+      - "/app/node_modules"
     ports: 
       - "3000:3000"
+    tty: true
 
   backend:
     container_name: "backend"

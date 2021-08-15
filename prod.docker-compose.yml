@@ -5,7 +5,7 @@ services:
     container_name: "frontend"
     build:
       context: "./frontend/"
-      dockerfile: "prod.Dockerfile"
+      target: "prod-env"
     ports: 
       - "3000:5000"
 

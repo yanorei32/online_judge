@@ -37,7 +37,7 @@ services:
     container_name: "db"
     image: mysql:8.0.25
     volumes:
-      - "db-store:/var/lib/mysql"
+      - "db_store:/var/lib/mysql"
     ports:
       - "3306:3306"
     environment:
@@ -57,4 +57,4 @@ services:
         - "3300:8080"
 
 volumes:
-  db-store:
+  db_store:

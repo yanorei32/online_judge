@@ -1,8 +1,6 @@
 # Develop
 FROM node:14.17.2 as dev-env
 
-ENV PATH=/node_modules/.bin:$PATH
-
 WORKDIR "/app"
 
 EXPOSE 3000

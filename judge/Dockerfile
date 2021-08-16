@@ -1,7 +1,10 @@
 # Develop
 FROM golang:1.16.5 as dev-env
 
+ENV PATH=/root/go/bin:$PATH
+
 WORKDIR "/app"
+RUN go get -v github.com/cosmtrek/air
 
 EXPOSE 1323
 

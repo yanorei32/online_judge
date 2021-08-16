@@ -12,6 +12,7 @@ services:
     ports: 
       - "3000:3000"
     tty: true
+    entrypoint: "bash -c 'npm i && npm run start'"
 
   backend:
     container_name: "backend"
@@ -23,6 +24,7 @@ services:
     ports: 
       - "1323:1323"
     tty: true
+    entrypoint: "air"
   
   judge:
     container_name: "judge"
@@ -32,6 +34,7 @@ services:
     volumes:
       - "./judge:/app"
     tty: true
+    entrypoint: "air"
 
   db:
     container_name: "db"

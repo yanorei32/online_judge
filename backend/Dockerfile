@@ -5,6 +5,7 @@ ENV PATH=/root/go/bin:$PATH
 
 WORKDIR "/app"
 RUN go get -v github.com/rubenv/sql-migrate/...
+RUN go get -v github.com/cosmtrek/air
 
 EXPOSE 1323
 

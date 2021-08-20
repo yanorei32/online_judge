@@ -1,8 +1,7 @@
 package router
 
 import (
-	"net/http"
-
+	"github.com/ecto0310/online_judge/backend/pkg/users"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -16,9 +15,9 @@ func InitRouter() *echo.Echo {
 	r.Use(middleware.Logger())
 	r.Use(middleware.Recover())
 
-	r.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+	r.POST("/register", users.Register)
+	r.POST("/login", users.Login)
+	r.GET("/logout", users.Logout)
 
 	return r
 }

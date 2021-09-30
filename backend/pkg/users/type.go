@@ -38,3 +38,8 @@ type LoginResponse struct {
 	Error   string            `json:"error"`
 	User    LoginResponseUser `json:"user"`
 }
+
+type LogoutResponse struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error"`
+}

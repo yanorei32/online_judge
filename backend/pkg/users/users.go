@@ -77,5 +77,9 @@ func Login(c echo.Context) error {
 }
 
 func Logout(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+	session := session.Default(c)
+	fmt.Println(session.Get("login"))
+	session.Set("login", false)
+	session.Save()
+	return c.JSON(http.StatusOK, LogoutResponse{Success: true, Error: ""})
 }

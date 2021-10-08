@@ -55,15 +55,5 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
 
-  swagger:
-    container_name: "swagger"
-    image: swaggerapi/swagger-ui
-    volumes:
-      - "./docs/openapi.yml:/usr/share/nginx/html/openapi.yml"
-    environment:
-      API_URL: "openapi.yml"
-    ports:
-        - "${API_DOC_PORT}:8080"
-
 volumes:
   db-store:

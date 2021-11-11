@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/ecto0310/online_judge/backend/pkg/users"
 	_ "github.com/go-sql-driver/mysql"
 	session "github.com/ipfans/echo-session"
 	"github.com/labstack/echo/v4"
@@ -31,6 +32,11 @@ func CreateServer(db *sql.DB) *echo.Echo {
 	r.Use(middleware.CORS())
 	r.Use(middleware.Logger())
 	r.Use(middleware.Recover())
+
+	users := &users.Users{DB: db}
+	r.POST("/register", users.Register)
+	r.POST("/login", users.Login)
+	r.POST("/logout", users.Logout)
 
 	return r
 }

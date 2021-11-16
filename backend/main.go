@@ -1,13 +1,24 @@
 package main
 
 import (
-	"github.com/ecto0310/online_judge/backend/pkg/db"
-	"github.com/ecto0310/online_judge/backend/pkg/router"
+	"fmt"
+	"os"
+
+	"github.com/ecto0310/online_judge/backend/pkg/server"
 )
 
 func main() {
-	db.Init()
+	db, err := server.CreateDbConnection(fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_DATABASE")))
+	if err != nil {
+		panic(err)
+	}
 
-	r := router.InitRouter()
-	r.Logger.Fatal(r.Start(":1323"))
+	store, err := server.CreateSessionStore(fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT")), os.Getenv("REDIS_PASSWORD"))
+	if err != nil {
+		panic(err)
+	}
+
+	s := server.CreateServer(db, store)
+	server.AddRouting(db, s)
+	s.Logger.Fatal(s.Start(":1323"))
 }

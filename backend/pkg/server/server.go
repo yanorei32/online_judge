@@ -41,5 +41,5 @@ func AddRouting(db *sql.DB, s *echo.Echo) {
 	users := &users.Users{DB: db}
 	s.POST("/register", users.Register)
 	s.POST("/login", users.Login)
-	s.POST("/logout", users.Logout)
+	s.GET("/logout", users.Logout)
 }

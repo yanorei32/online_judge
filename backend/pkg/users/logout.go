@@ -14,6 +14,10 @@ type LogoutResponse struct {
 
 func (u *Users) Logout(c echo.Context) error {
 	session := session.Default(c)
+	login := session.Get("login")
+	if login == nil || login == false {
+		return c.JSON(http.StatusBadRequest, LogoutResponse{Success: false, Error: "Session is not login"})
+	}
 	session.Set("login", false)
 	session.Save()
 	return c.JSON(http.StatusOK, LogoutResponse{Success: true, Error: ""})

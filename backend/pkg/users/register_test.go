@@ -10,12 +10,11 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/ecto0310/online_judge/backend/pkg/test_helper"
-	"github.com/ecto0310/online_judge/backend/pkg/users"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRegisterSuccess(t *testing.T) {
-	e, db, mock, err := test_helper.CreateTestServer()
+	e, mock, err := test_helper.CreateTestServer()
 	if err != nil {
 		t.Fatalf("Failed to create mock server '%#v'", err)
 	}
@@ -30,13 +29,10 @@ func TestRegisterSuccess(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/register", bytes.NewBuffer([]byte("{\"email\": \"admin@example.com\",\"name\": \"admin\",\"password\": \"password\"}")))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
+	e.ServeHTTP(rec, req)
 
-	users := &users.Users{DB: db}
-	if assert.NoError(t, users.Register(c)) {
-		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Equal(t, "{\"success\":true,\"error\":\"\",\"user\":{\"id\":1,\"name\":\"admin\",\"role\":\"member\"}}\n", rec.Body.String())
-	}
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Equal(t, "{\"success\":true,\"error\":\"\",\"user\":{\"id\":1,\"name\":\"admin\",\"role\":\"member\"}}\n", rec.Body.String())
 	err = mock.ExpectationsWereMet()
 	if err != nil {
 		t.Errorf("Incorrect DB call '%#v'", err)
@@ -44,7 +40,7 @@ func TestRegisterSuccess(t *testing.T) {
 }
 
 func TestRegisterNameValidate(t *testing.T) {
-	e, db, mock, err := test_helper.CreateTestServer()
+	e, mock, err := test_helper.CreateTestServer()
 	if err != nil {
 		t.Fatalf("Failed to create mock server '%#v'", err)
 	}
@@ -52,13 +48,10 @@ func TestRegisterNameValidate(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/register", bytes.NewBuffer([]byte("{\"email\": \"admin@example.com\",\"name\": \"\",\"password\": \"password\"}")))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
+	e.ServeHTTP(rec, req)
 
-	users := &users.Users{DB: db}
-	if assert.NoError(t, users.Register(c)) {
-		assert.Equal(t, http.StatusBadRequest, rec.Code)
-		assert.Equal(t, "{\"success\":false,\"error\":\"insufficient name length\",\"user\":{\"id\":0,\"name\":\"\",\"role\":\"\"}}\n", rec.Body.String())
-	}
+	assert.Equal(t, http.StatusBadRequest, rec.Code)
+	assert.Equal(t, "{\"success\":false,\"error\":\"insufficient name length\",\"user\":{\"id\":0,\"name\":\"\",\"role\":\"\"}}\n", rec.Body.String())
 	err = mock.ExpectationsWereMet()
 	if err != nil {
 		t.Errorf("Incorrect DB call '%#v'", err)
@@ -66,7 +59,7 @@ func TestRegisterNameValidate(t *testing.T) {
 }
 
 func TestRegisterPasswordValidate(t *testing.T) {
-	e, db, mock, err := test_helper.CreateTestServer()
+	e, mock, err := test_helper.CreateTestServer()
 	if err != nil {
 		t.Fatalf("Failed to create mock server '%#v'", err)
 	}
@@ -74,13 +67,10 @@ func TestRegisterPasswordValidate(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/register", bytes.NewBuffer([]byte("{\"email\": \"admin@example.com\",\"name\": \"admin\",\"password\": \"\"}")))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
+	e.ServeHTTP(rec, req)
 
-	users := &users.Users{DB: db}
-	if assert.NoError(t, users.Register(c)) {
-		assert.Equal(t, http.StatusBadRequest, rec.Code)
-		assert.Equal(t, "{\"success\":false,\"error\":\"insufficient password length\",\"user\":{\"id\":0,\"name\":\"\",\"role\":\"\"}}\n", rec.Body.String())
-	}
+	assert.Equal(t, http.StatusBadRequest, rec.Code)
+	assert.Equal(t, "{\"success\":false,\"error\":\"insufficient password length\",\"user\":{\"id\":0,\"name\":\"\",\"role\":\"\"}}\n", rec.Body.String())
 	err = mock.ExpectationsWereMet()
 	if err != nil {
 		t.Errorf("Incorrect DB call '%#v'", err)
@@ -88,7 +78,7 @@ func TestRegisterPasswordValidate(t *testing.T) {
 }
 
 func TestRegisterDuplicate(t *testing.T) {
-	e, db, mock, err := test_helper.CreateTestServer()
+	e, mock, err := test_helper.CreateTestServer()
 	if err != nil {
 		t.Fatalf("Failed to create mock server '%#v'", err)
 	}
@@ -100,13 +90,10 @@ func TestRegisterDuplicate(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/register", bytes.NewBuffer([]byte("{\"email\": \"admin@example.com\",\"name\": \"admin\",\"password\": \"password\"}")))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
+	e.ServeHTTP(rec, req)
 
-	users := &users.Users{DB: db}
-	if assert.NoError(t, users.Register(c)) {
-		assert.Equal(t, http.StatusBadRequest, rec.Code)
-		assert.Equal(t, "{\"success\":false,\"error\":\"failed to register to DB\",\"user\":{\"id\":0,\"name\":\"\",\"role\":\"\"}}\n", rec.Body.String())
-	}
+	assert.Equal(t, http.StatusBadRequest, rec.Code)
+	assert.Equal(t, "{\"success\":false,\"error\":\"failed to register to DB\",\"user\":{\"id\":0,\"name\":\"\",\"role\":\"\"}}\n", rec.Body.String())
 	err = mock.ExpectationsWereMet()
 	if err != nil {
 		t.Errorf("Incorrect DB call '%#v'", err)

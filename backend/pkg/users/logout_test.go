@@ -16,7 +16,7 @@ func TestLogoutSuccess(t *testing.T) {
 		t.Fatalf("Failed to create mock server '%#v'", err)
 	}
 
-	req := httptest.NewRequest(http.MethodPost, "/logout", bytes.NewBuffer([]byte("")))
+	req := httptest.NewRequest(http.MethodGet, "/logout", bytes.NewBuffer([]byte("")))
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 	e.ServeHTTP(rec, req)

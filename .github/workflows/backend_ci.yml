@@ -1,0 +1,46 @@
+name: backend_ci
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  backend_ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Use cache
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-backend-${{ hashFiles('backend/go.sum') }}
+
+      - name: Get dependencies
+        working-directory: ./backend
+        run: go get -v -t -d ./...
+
+      - name: Check vet
+        working-directory: ./backend
+        run: go vet ./...
+
+      - name: Check format
+        working-directory: ./backend
+        run: test "$(go fmt ./...)" = ""
+
+      - name: Test code
+        working-directory: ./backend
+        run: go test -v -cover ./...

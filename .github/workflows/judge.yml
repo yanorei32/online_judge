@@ -1,0 +1,40 @@
+name: judge
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
+      - name: Get dependencies
+        working-directory: ./judge
+        run: go get -v -t -d ./...
+
+      - name: Check vet
+        working-directory: ./judge
+        run: go vet ./...
+
+      - name: Check format
+        working-directory: ./judge
+        run: test "$(go fmt ./...)" = ""
+
+      - name: Test code
+        working-directory: ./judge
+        run: go test -v -cover ./...

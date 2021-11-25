@@ -1,0 +1,32 @@
+name: frontend
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - name: Set up NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Get dependencies
+        working-directory: ./frontend
+        run: yarn install --frozen-lockfile
+
+      - name: Check format
+        working-directory: ./frontend
+        run: yarn fmt

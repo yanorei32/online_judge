@@ -1,20 +1,20 @@
 # Develop
-FROM node:14.17.2 as dev-env
+FROM node:16.13.0 as dev-env
 
 WORKDIR "/app"
 
 EXPOSE 3000
 
 # Build
-FROM node:14.17.2 as build-env
+FROM node:16.13.0 as build-env
 
 WORKDIR /work
 COPY . .
-RUN npm ci
-RUN npm run build
+RUN yarn install
+RUN yarn build
 
 # Product
-FROM node:14.17.2 as prod-env
+FROM node:16.13.0 as prod-env
 
 WORKDIR /app
 COPY --from=build-env /work/build /app/build

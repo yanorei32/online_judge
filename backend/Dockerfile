@@ -1,5 +1,5 @@
 # Develop
-FROM golang:1.16.5 as dev-env
+FROM golang:1.17.3 as dev-env
 
 ENV PATH=/root/go/bin:$PATH
 
@@ -10,7 +10,7 @@ RUN go get -v github.com/cosmtrek/air
 EXPOSE 1323
 
 # Build
-FROM golang:1.16.5 as build-env
+FROM golang:1.17.3 as build-env
 
 WORKDIR /work
 COPY . .

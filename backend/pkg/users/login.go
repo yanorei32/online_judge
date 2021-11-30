@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	session "github.com/ipfans/echo-session"
+	echo_session "github.com/ipfans/echo-session"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -45,7 +45,7 @@ func (u *Users) Login(c echo.Context) error {
 	}
 
 	loginUser := LoginResponseUser{Id: user.Id, Name: user.Name, Role: user.Role}
-	session := session.Default(c)
+	session := echo_session.Default(c)
 	session.Set("id", loginUser.Id)
 	session.Set("name", loginUser.Name)
 	session.Set("role", loginUser.Role)

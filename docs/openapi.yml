@@ -101,7 +101,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/GetProblemResponse"
   /submit:
-    get:
+    post:
       summary: "Submit code"
       tags:
         - "submissions"

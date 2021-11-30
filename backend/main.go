@@ -18,7 +18,12 @@ func main() {
 		panic(err)
 	}
 
+	aws, err := server.CreateAws(fmt.Sprintf("http://%s:%s", os.Getenv("MINIO_HOST"), os.Getenv("MINIO_PORT")), os.Getenv("MINIO_ROOT_USER"), os.Getenv("MINIO_ROOT_PASSWORD"))
+	if err != nil {
+		panic(err)
+	}
+
 	s := server.CreateServer(db, store)
-	server.AddRouting(db, s)
+	server.AddRouting(db, s, aws)
 	s.Logger.Fatal(s.Start(":1323"))
 }

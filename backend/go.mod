@@ -8,6 +8,7 @@ require (
 	github.com/aws/aws-sdk-go v1.42.14
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/ipfans/echo-session v0.0.0-20190712090129-fb129b458668
+	github.com/johannesboyne/gofakes3 v0.0.0-20210819161434-5c8dfcfe5310
 	github.com/labstack/echo/v4 v4.6.1
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5

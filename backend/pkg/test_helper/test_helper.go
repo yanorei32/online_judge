@@ -9,7 +9,12 @@ import (
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/alicebob/miniredis/v2"
+	"github.com/aws/aws-sdk-go/aws"
+	aws_session "github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/ecto0310/online_judge/backend/pkg/server"
+	"github.com/johannesboyne/gofakes3"
+	"github.com/johannesboyne/gofakes3/backend/s3mem"
 	"github.com/labstack/echo/v4"
 )
 
@@ -26,8 +31,20 @@ func CreateTestServer() (*echo.Echo, sqlmock.Sqlmock, error) {
 	if err != nil {
 		return nil, nil, err
 	}
+	backend := s3mem.New()
+	faker := gofakes3.New(backend)
+	ts := httptest.NewServer(faker.Server())
+	aws, err := server.CreateAws(ts.URL, "user", "password")
+	if err != nil {
+		return nil, nil, err
+	}
+	err = createS3Bucket(aws)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	e := server.CreateServer(db, store)
-	server.AddRouting(db, e)
+	server.AddRouting(db, e, aws)
 
 	return e, mock, err
 }
@@ -49,4 +66,15 @@ func CreateLoginSession(e *echo.Echo, mock sqlmock.Sqlmock) (string, error) {
 		return "", errors.New("failed to create session")
 	}
 	return rec.Result().Header.Get("Set-Cookie"), nil
+}
+
+func createS3Bucket(session *aws_session.Session) error {
+	client := s3.New(session)
+	_, err := client.CreateBucket(&s3.CreateBucketInput{
+		Bucket: aws.String("minio-bucket"),
+	})
+	if err != nil {
+		return errors.New("failed to create bucket")
+	}
+	return nil
 }

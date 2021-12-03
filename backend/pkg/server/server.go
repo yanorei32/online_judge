@@ -65,4 +65,5 @@ func AddRouting(db *sql.DB, s *echo.Echo, aws *aws_session.Session) {
 
 	submissions := &submissions.Submissions{DB: db, AWS: aws}
 	s.POST("/submit", submissions.Submit)
+	s.GET("/submissions", submissions.List)
 }

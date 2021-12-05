@@ -5,10 +5,9 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
-	"github.com/go-playground/validator/v10"
-
 )
 
 var validate *validator.Validate

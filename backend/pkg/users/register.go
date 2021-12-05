@@ -7,12 +7,16 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+	"github.com/go-playground/validator/v10"
+
 )
 
+var validate *validator.Validate
+
 type RegisterData struct {
-	Email    string `json:"email"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required,min=3,max=191"`
+	Name     string `json:"name" validate:"required,min=4,max=255,regexp=^[a-zA-Z_]*$"`
+	Password string `json:"password" validate:"required,min=8,max=191"`
 }
 
 type RegisterResponseUser struct {
@@ -34,9 +38,11 @@ func (u *Users) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, RegisterResponse{Success: false, Error: "unknown error"})
 	}
 
-	err = validateRegisterData(data)
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, RegisterResponse{Success: false, Error: err.Error()})
+	if errs := validate.Struct(data); errs != nil {
+		return c.JSON(
+			http.StatusBadRequest,
+			RegisterResponse{Success: false, Error: errs.(validator.ValidationErrors).Error()},
+		)
 	}
 
 	err = registerUser(u.DB, data)
